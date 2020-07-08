@@ -1,0 +1,3 @@
+C:/Users/nikit/CLionProjects/long/cmake-build-debug/CMakeFiles/long.dir
+C:/Users/nikit/CLionProjects/long/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/nikit/CLionProjects/long/cmake-build-debug/CMakeFiles/rebuild_cache.dir
