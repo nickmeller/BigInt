@@ -41,9 +41,19 @@ void clean_front_zeros(big_int * b) {
 
 void get_minus(big_int * a) {
     if (back(a) < 0) {
-        a->sign = 1;
+        a->sign = 0;
         a->num[a->tail] = abs(back(a));
     }
+}
+
+void invert_sign(big_int * a) {
+    a->sign = !a->sign;
+}
+
+void swap(big_int * a, big_int * b) {
+    big_int * t = a;
+    a = b;
+    b = t;
 }
 
 void init(big_int *b,const char * xstr) {
@@ -141,17 +151,19 @@ void plus(big_int * a, big_int * b) {
 
 void multi(big_int * a, big_int * b) {
     data c = malloc(sizeof(int) * (size(a) + size(b)));
+    memset(c, 0, sizeof(int) * (size(a) + size(b)));
     for (size_t i = 0; i < size(a); i++) {
-        for (ptrdiff_t j = 0, carry = 0; j < size(b) || carry; j++) {
+        for (int j = 0, carry = 0; j < (int)size(b) || carry; j++) {
             long long cur = c[i + j] + a->num[i] * 1ll * (j < size(b) ? b->num[j] : 0) + carry;
-            c[i + j] = cur % BASE;
-            carry = cur / BASE;
+            c[i + j] = (int)(cur % BASE);
+            carry = (int)(cur / BASE);
         }
 
     }
     a->sign = a->sign && b->sign || (!a->sign) && (!b->sign);
     a->tail = (size(a) + size(b)) - 1;
     a->capacity = (size(a) + size(b));
+    free(a->num);
     a->num = c;
     while (size(a) > 1 && back(a) == 0)
         a->tail--;
@@ -167,11 +179,8 @@ int main() {
     printf("\n");
 
     init(&b, "3000000000000000000000000000000000000000234");
-    print(&b);
-    printf("\n");
-
-    plus(&a, &b);
+    multi(&a, &b);
     print(&a);
-    printf("\n");
+    print(&b);
     return 0;
 }

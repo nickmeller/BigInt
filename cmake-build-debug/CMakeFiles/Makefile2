@@ -43,10 +43,10 @@ RM = "C:\Program Files\JetBrains\CLion 2020.1.2\bin\cmake\win\bin\cmake.exe" -E 
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = C:\Users\nikit\CLionProjects\long
+CMAKE_SOURCE_DIR = C:\Users\Nick\Documents\Proj\long\BigInt
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = C:\Users\nikit\CLionProjects\long\cmake-build-debug
+CMAKE_BINARY_DIR = C:\Users\Nick\Documents\Proj\long\BigInt\cmake-build-debug
 
 #=============================================================================
 # Directory level rules for the build root directory
@@ -73,14 +73,14 @@ clean: CMakeFiles/long.dir/clean
 CMakeFiles/long.dir/all:
 	$(MAKE) -f CMakeFiles\long.dir\build.make CMakeFiles/long.dir/depend
 	$(MAKE) -f CMakeFiles\long.dir\build.make CMakeFiles/long.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=C:\Users\nikit\CLionProjects\long\cmake-build-debug\CMakeFiles --progress-num=1,2 "Built target long"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=C:\Users\Nick\Documents\Proj\long\BigInt\cmake-build-debug\CMakeFiles --progress-num=1,2 "Built target long"
 .PHONY : CMakeFiles/long.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/long.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\nikit\CLionProjects\long\cmake-build-debug\CMakeFiles 2
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\Nick\Documents\Proj\long\BigInt\cmake-build-debug\CMakeFiles 2
 	$(MAKE) -f CMakeFiles\Makefile2 CMakeFiles/long.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\nikit\CLionProjects\long\cmake-build-debug\CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\Nick\Documents\Proj\long\BigInt\cmake-build-debug\CMakeFiles 0
 .PHONY : CMakeFiles/long.dir/rule
 
 # Convenience name for target.
