@@ -71,6 +71,16 @@ void init(big_int *b,const char * xstr) {
     get_minus(b);
 }
 
+big_int * init_num(int a) {
+    big_int * returnable = malloc(sizeof(big_int));
+    returnable->sign = (a >= 0 ? 1 : 0);
+    returnable->capacity = 1;
+    returnable->tail = 0;
+    returnable->num = malloc(sizeof(int));
+    returnable->num[0] = a;
+    return returnable;
+}
+
 big_int * init_cpy(big_int * a) {
     if (!a) exit(EXIT_FAILURE);
     big_int * ret = malloc(sizeof(big_int));
@@ -157,6 +167,7 @@ big_int * plus(big_int * x, big_int * y) {
             carry = a->num[i] >= BASE;
             if (carry) a->num[i] -= BASE;
         }
+        return a;
     }
     else {if (a->sign) return minus(a, y); else return minus(y, a);}
 }
@@ -182,13 +193,88 @@ big_int * multi(big_int * x, big_int * b) {
     return a;
 }
 
-int main() {
-    big_int * a = malloc(sizeof(big_int));
-    init(a, "15");
-    big_int * b = init_cpy(a);
-    print(b);
-    printf("\n");
-    big_int * c = multi(a, b);
-    print(c);
+int lessOrEquals(big_int * a, big_int * b) {
+    return less(a, b) || equals(a,b);
+}
+
+big_int * div2(big_int * a) {
+    int carry = 0;
+    for (ptrdiff_t i = size(a) - 1; i>=0; i--) {
+        long long cur = a->num[i] + carry * 1ll * BASE;
+        a->num[i] = (int) cur / 2;
+        carry = (int) cur % 2;
+    }
+    while (size(a) > 1 && back(a) == 0)
+        a->tail--;
+    return a;
+}
+
+big_int * sqroot(big_int * a) {
+    if (!a->sign) exit(EXIT_FAILURE);
+    big_int * l = init_num(1);
+    big_int * r = init_cpy(a);
+    while(less(l, minus(r, init_num(1)))) {
+        big_int * m = div2(plus(l, r));
+        if (less(multi(m,m), a)) {
+            l = m;
+        } else {
+            r = m;
+        }
+    }
+    return r;
+}
+
+big_int * divl(big_int * a, big_int * b) {
+    big_int * l = init_num(1);
+    big_int * r = init_cpy(a);
+    while(less(l, minus(r, init_num(1)))) {
+        big_int * m = div2(plus(l, r));
+        if (less(multi(m,b), a)) {
+            l = m;
+        } else {
+            r = m;
+        }
+    }
+    return r;
+}
+
+char * input_str(char * str, FILE * in) {
+    int capacity = 64;
+    str = malloc(sizeof(char) * capacity);
+
+    char ch;
+    size_t sz = 0;
+    while ((ch = getc(in) != EOF) && ch != ' ' && ch != '\n') {
+        if (sz == capacity) {
+            capacity *= 2;
+            str = realloc(str, sizeof(char) * capacity);
+        }
+        str[sz++] = ch;
+    }
+    if (sz == capacity) {
+        str = realloc(str, sizeof(char) * (capacity + 1));
+    }
+    str[sz] = '\n';
+    return str;
+}
+
+void input_file(char * input, char * op, char * left, char * right) {
+    FILE * in = fopen(input, "r");
+    if (!in) {
+        fprintf(stderr, "Error while opening file");
+        exit(EXIT_FAILURE);
+    }
+    fscanf(in, "%s", op);
+}
+
+
+int main(int argc, char ** argv) {
+    if (argc != 3) {
+        fprintf(stderr, "Expected 2 arguments" );
+        exit(EXIT_FAILURE);
+    }
+    char * op = malloc(sizeof(char) * 3);
+    char * op1;
+    char * op2;
     return 0;
 }
