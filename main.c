@@ -71,6 +71,17 @@ void init(big_int *b,const char * xstr) {
     get_minus(b);
 }
 
+big_int * init_cpy(big_int * a) {
+    if (!a) exit(EXIT_FAILURE);
+    big_int * ret = malloc(sizeof(big_int));
+    ret->sign = a->sign;
+    ret->num = malloc(sizeof(int) * a->capacity);
+    ret->capacity = a->capacity;
+    ret->tail = a->tail;
+    mempcpy(ret->num, a->num, sizeof(int) * a->capacity);
+    return ret;
+}
+
 void print(big_int * b) {
     if (!b->sign) printf( "-");
     printf("%d", b->tail == -1 ? 0 : back(b));
@@ -114,8 +125,9 @@ ptrdiff_t max(ptrdiff_t a, ptrdiff_t b) {
     else return b;
 }
 
-void minus(big_int * a, big_int * b) {
-    if (more(a, b) || equals(a, b)) {
+big_int * minus(big_int * x, big_int * b) {
+    if (more(x, b) || equals(x, b)) {
+        big_int * a = init_cpy(x);
         a->sign = 1;
         int carry = 0;
         for (size_t i = 0; i < size(b) || carry; i++) {
@@ -125,31 +137,32 @@ void minus(big_int * a, big_int * b) {
         }
         while (size(a) > 1 && back(a) == 0)
             a->tail--;
+        return a;
     } else {
-        minus(b, a);
-        big_int *t = b;
-        b = a;
-        a = t;
+        big_int * a = minus(b, x);
         a->sign = 0;
+        return a;
     }
 }
 
-void plus(big_int * a, big_int * b) {
-    if (a->sign == b->sign) {
+big_int * plus(big_int * x, big_int * y) {
+    big_int *a = init_cpy(x);
+    if (a->sign == y->sign) {
         int carry = 0;
-        for (size_t i = 0; i <= max(a->tail, b->tail); i++) {
+        for (size_t i = 0; i <= max(a->tail, y->tail); i++) {
             if (i == a->tail + 1) {
                 push(a, 0);
             }
-            a->num[i] += carry + (i <= b->tail ? b->num[i] : 0);
+            a->num[i] += carry + (i <= y->tail ? y->num[i] : 0);
             carry = a->num[i] >= BASE;
             if (carry) a->num[i] -= BASE;
         }
     }
-    else {if (a->sign) minus(a, b); else minus(b, a);}
+    else {if (a->sign) return minus(a, y); else return minus(y, a);}
 }
 
-void multi(big_int * a, big_int * b) {
+big_int * multi(big_int * x, big_int * b) {
+    big_int * a = init_cpy(x);
     data c = malloc(sizeof(int) * (size(a) + size(b)));
     memset(c, 0, sizeof(int) * (size(a) + size(b)));
     for (size_t i = 0; i < size(a); i++) {
@@ -158,7 +171,6 @@ void multi(big_int * a, big_int * b) {
             c[i + j] = (int)(cur % BASE);
             carry = (int)(cur / BASE);
         }
-
     }
     a->sign = a->sign && b->sign || (!a->sign) && (!b->sign);
     a->tail = (size(a) + size(b)) - 1;
@@ -167,20 +179,16 @@ void multi(big_int * a, big_int * b) {
     a->num = c;
     while (size(a) > 1 && back(a) == 0)
         a->tail--;
+    return a;
 }
 
-
-
 int main() {
-    big_int a;
-    big_int b;
-    init(&a, "-200000");
-    print(&a);
+    big_int * a = malloc(sizeof(big_int));
+    init(a, "15");
+    big_int * b = init_cpy(a);
+    print(b);
     printf("\n");
-
-    init(&b, "3000000000000000000000000000000000000000234");
-    multi(&a, &b);
-    print(&a);
-    print(&b);
+    big_int * c = multi(a, b);
+    print(c);
     return 0;
 }
